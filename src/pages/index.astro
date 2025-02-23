@@ -1,11 +1,96 @@
 ---
-import Welcome from '../components/Welcome.astro';
+import Content from '../components/Content.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Celebración de Cumpleaños">
+  <main class="relative min-h-screen">
+    <!-- Background Image -->
+    <div class="absolute inset-0 z-0">
+      <img
+        src="/elba.jpg"
+        alt="elba"
+        class="w-full h-full object-cover opacity-50"
+      />
+      <div class="absolute inset-0 bg-gradient-to-b from-black/60 to-black/30">
+      </div>
+    </div>
+
+    <!-- Content -->
+    <Content />
+  </main>
+
+  <script>
+    import confetti from 'canvas-confetti';
+
+    const daysElement = document.getElementById('days') as HTMLElement;
+    const hoursElement = document.getElementById('hours') as HTMLElement;
+    const minutesElement = document.getElementById('minutes') as HTMLElement;
+    const secondsElement = document.getElementById('seconds') as HTMLElement;
+
+    // Countdown Timer
+    function updateCountdown() {
+      const targetDate = new Date('March 5, 2025 00:00:00').getTime();
+
+      function update() {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        daysElement.textContent = days.toString().padStart(2, '0');
+
+        hoursElement.textContent = hours.toString().padStart(2, '0');
+
+        minutesElement.textContent = minutes.toString().padStart(2, '0');
+
+        secondsElement.textContent = seconds.toString().padStart(2, '0');
+
+        if (distance < 0) {
+          clearInterval(countdownInterval);
+          daysElement.textContent = '00';
+          hoursElement.textContent = '00';
+          minutesElement.textContent = '00';
+          secondsElement.textContent = '00';
+        }
+      }
+
+      update();
+      const countdownInterval = setInterval(update, 1000);
+    }
+
+    // Initialize countdown
+    updateCountdown();
+
+    // Confetti effect
+    document.getElementById('confirmBtn')?.addEventListener('click', () => {
+      // Fire confetti from the center
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+      });
+
+      // Fire confetti from the left
+      confetti({
+        particleCount: 50,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+      });
+
+      // Fire confetti from the right
+      confetti({
+        particleCount: 50,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+      });
+    });
+  </script>
 </Layout>
